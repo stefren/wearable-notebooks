@@ -3,31 +3,31 @@
 #   jupytext:
 #     text_representation:
 #       extension: .py
-#       format_name: light
-#       format_version: '1.5'
+#       format_name: percent
+#       format_version: '1.3'
 #       jupytext_version: 1.16.7
 #   kernelspec:
-#     display_name: Python 3
+#     display_name: Python 3 (ipykernel)
 #     language: python
 #     name: python3
 # ---
 
-# + [markdown] id="iAx3TIX-FUjI"
+# %% [markdown] id="iAx3TIX-FUjI"
 # # Garmin Fenix 7S
 
-# + [markdown] id="qVDcFCQFFUjL"
+# %% [markdown] id="qVDcFCQFFUjL"
 # <p align="left">
 #   <img src="https://res.garmin.com/transform/image/upload/b_rgb:FFFFFF,c_pad,dpr_2.0,f_auto,h_400,q_auto,w_400/c_pad,h_400,w_400/v1/Product_Images/en/products/010-02539-00/v/cf-xl?pgw=1" width="300"/>
 # </p>
 
-# + [markdown] id="KVF8m9AgFUjM"
+# %% [markdown] id="KVF8m9AgFUjM"
 # A versatile watch that is capable of tracking your heart rate, steps, and other metrics, the [Garmin Fenix 7S](https://www.garmin.com/en-US/p/735542) is a watch that stores a treasure trove of health data that we will explore in this notebook.
 #
 # We've used the Garmin Fenix 7S for a while now, and we'll show you how to extract its data, visualize data, and compute correlations and other statistical measures based on your data! While you will need a Garmin Fenix 7S to actually collect the data itself, the data *extraction* requires only an internet connection and your username and password.
 #
 # If you want to know more about the Garmin Fenix 7S, see the [Wearipedia](https://www.wearipedia.com/wearables/garmin-fenix) for a detailed analysis of performances, sensors, data privacy, and extraction pipelines.
 
-# + [markdown] id="1SGOXsT2FUjM"
+# %% [markdown] id="1SGOXsT2FUjM"
 # You can extract the parameters as below:
 #
 # | Parameter Name                  | Input Parameter                  | Frequency          | Return Type |
@@ -46,7 +46,7 @@
 # | Heart Rate Variability          | "hrv"                            | 1 Day               | List        |
 #
 
-# + [markdown] id="ZPvUrW0yFUjN"
+# %% [markdown] id="ZPvUrW0yFUjN"
 # In this guide, we sequentially cover the following **nine** topics to extract from the unofficial Garmin API:
 # 1. **Setup**
 #     - Data Receiver Setup
@@ -74,7 +74,7 @@
 #
 # Disclaimer: this notebook is purely for educational purposes. All of the data currently stored in this notebook is purely *synthetic*, meaning randomly generated according to rules we created. Despite this, the end-to-end data extraction pipeline has been tested on our own data, meaning that if you enter your own email and password on your own Colab instance, you can visualize your own *real* data. That being said, we were unable to thoroughly test the timezone functionality, though, since we only have one account, so beware.
 
-# + [markdown] id="TzzCqkodFUjN"
+# %% [markdown] id="TzzCqkodFUjN"
 # # 1. Setup
 #
 # ## 1.1 Data Receiver Setup
@@ -102,43 +102,41 @@
 #
 #
 
-# + colab={"base_uri": "https://localhost:8080/"} id="CJ1vphyVbESM" outputId="f0e0d259-d96d-4dbc-dd84-7dccf0c31d30"
-# !pip install --no-cache-dir git+https://github.com/a-llison-lau/wearipedia.git
-# !pip install garth
+# %% colab={"base_uri": "https://localhost:8080/"} id="CJ1vphyVbESM" outputId="f0e0d259-d96d-4dbc-dd84-7dccf0c31d30"
 import wearipedia
 
-# + [markdown] id="pH_pFeIIFUjP"
+# %% [markdown] id="pH_pFeIIFUjP"
 # # 2. Authentication and Authorization
 #
 # To obtain access to data, authorization is required. All you'll need to do here is just put in the email and password for the Garmin Fenix 7S device. We'll use this username and password to extract the data in the sections below.
 
-# + id="M-EYhl7EFUjP"
+# %% id="M-EYhl7EFUjP"
 #@title Enter Garmin login credentials
-email_address = "jadongeathers@gmail.com" #@param {type:"string"}
-password = "StanfordGarminD4ta" #@param {type:"string"}
+email_address = "stefren97@gmail.com" #@param {type:"string"}
+password = "BeRWsN4^f3" #@param {type:"string"}
 
-# + [markdown] id="SWm4H8xsFUjP"
+# %% [markdown] id="SWm4H8xsFUjP"
 # # 3. Data Extraction
 #
 # Data can be extracted via [wearipedia](https://github.com/Stanford-Health/wearipedia/), our open-source Python package that unifies dozens of complex wearable device APIs into one simple, common interface.
 #
 # First, we'll set a date range and then extract all of the data within that date range. You can select whether you would like synthetic data or not with the checkbox.
 
-# + id="0GW8oVFcFUjP"
+# %% id="0GW8oVFcFUjP"
 #@title Enter start and end dates (in the format yyyy-mm-dd)
 
 #set start and end dates - this will give you all the data from 2000-01-01 (January 1st, 2000) to 2100-02-03 (February 3rd, 2100), for example
-start_date='2022-03-01' #@param {type:"string"}
-end_date='2022-06-17' #@param {type:"string"}
-synthetic = True #@param {type:"boolean"}
+start_date='2023-11-05' #@param {type:"string"}
+end_date='2023-11-12' #@param {type:"string"}
+synthetic = False #@param {type:"boolean"}
 
-# + colab={"base_uri": "https://localhost:8080/"} id="HiJswGB0FUjQ" outputId="73a92c3c-b33e-4bb7-c272-446d21e3a47e"
+# %% colab={"base_uri": "https://localhost:8080/"} id="HiJswGB0FUjQ" outputId="73a92c3c-b33e-4bb7-c272-446d21e3a47e"
 import pandas as pd
 import numpy as np
 from IPython.display import display
-# !pip install july
+# # !pip3.11 install july
 import matplotlib.pyplot as plt
-import july
+# import july
 
 device = wearipedia.get_device("garmin/fenix_7s")
 
@@ -147,7 +145,7 @@ if not synthetic:
 
 params = {"start_date": start_date, "end_date": end_date}
 
-# + id="07IN5GjZFUjQ"
+# %% id="07IN5GjZFUjQ"
 #@title Extracting all datafields
 
 steps = device.get_data("steps", params=params)
@@ -163,7 +161,10 @@ sleep = device.get_data("sleep", params=params)
 spo2 = device.get_data("spo2", params=params)
 hrv = device.get_data("hrv", params=params)
 
-# + [markdown] id="oHVjBE2qFUjQ"
+# %% id="07IN5GjZFUjQ"
+print(floors)
+
+# %% [markdown] id="oHVjBE2qFUjQ"
 # # 4. Data Exporting
 #
 # In this section, we export all of this data to formats compatible with popular scientific computing software (R, Excel, Google Sheets, Matlab). Specifically, we will first export to JSON, which can be read by R and Matlab. Then, we will export to CSV, which can be consumed by Excel, Google Sheets, and every other popular programming language.
@@ -172,7 +173,7 @@ hrv = device.get_data("hrv", params=params)
 #
 # Exporting to JSON is fairly simple. We export each datatype separately and also export a complete version that includes all simultaneously.
 
-# + cellView="form" id="wSZ29eXKFUjQ"
+# %% cellView="form" id="wSZ29eXKFUjQ"
 #@title Select which type of data to export as JSON
 
 import json
@@ -216,7 +217,7 @@ if get_spo2:
 if get_hrv:
     json.dump(hrv, open("hrv.json", "w"))
 
-# + [markdown] id="iGLO2q5KFUjQ"
+# %% [markdown] id="iGLO2q5KFUjQ"
 # Feel free to open the file viewer (see left pane) to look at the outputs!
 #
 # ## Exporting to CSV and XLSX (Excel, Google Sheets, R, Matlab, etc.)
@@ -225,7 +226,7 @@ if get_hrv:
 #
 # We will thus export steps, heart rates, and breath rates all as separate files.
 
-# + cellView="form" id="lYLNhKifFUjR"
+# %% cellView="form" id="lYLNhKifFUjR"
 #@title Select which type of data to export as CSV and XLSX
 
 import pandas as pd
@@ -318,7 +319,7 @@ if get_hrv:
     df.to_excel('hrv.xlsx', index=False)
 
 
-# + [markdown] id="E9yw6jYZJdJT"
+# %% [markdown] id="E9yw6jYZJdJT"
 # # 5. Adherence
 #
 # We are interested in knowing on which days our user used the watch. We can plot a graph to visualize this.
@@ -329,7 +330,7 @@ if get_hrv:
 #
 # Finally, we visualize the presence of recorded heart rate data over the specified date range using a step plot. This plot highlights the simulated nonadherence by illustrating gaps in the recorded heart rate data on certain days.
 
-# + cellView="form" colab={"base_uri": "https://localhost:8080/", "height": 402} id="nzUXJateJZWs" outputId="fc2dfb47-0e67-48a1-b040-257f473bd463"
+# %% cellView="form" colab={"base_uri": "https://localhost:8080/", "height": 402} id="nzUXJateJZWs" outputId="fc2dfb47-0e67-48a1-b040-257f473bd463"
 #@title Select dates to check user adherence
 
 adherence_start_date = "2022-04-10" #@param {type:"date"}
@@ -360,20 +361,20 @@ plt.xticks(rotation=45)
 plt.grid(True)
 plt.show()
 
-# + [markdown] id="nAdGu7y6FUjR"
+# %% [markdown] id="nAdGu7y6FUjR"
 # # 6. Visualization
 #
 # We've extracted lots of data, but what does it look like?
 #
 # In this section, we will be visualizing our all kinds of data in a plot. This plot is intended to provide a starter example for plotting, whereas later examples emphasize deep control and aesthetics.
 
-# + colab={"base_uri": "https://localhost:8080/"} id="aiyxtZwbFUjR" outputId="d0513e34-130e-445c-c354-88b328860981"
+# %% colab={"base_uri": "https://localhost:8080/"} id="aiyxtZwbFUjR" outputId="d0513e34-130e-445c-c354-88b328860981"
 from datetime import datetime, timedelta
 from logging import exception
 #@title Select data to plot { display-mode: "form" }
 
 feature = "steps" #@param ["steps", "body_battery", "hr", "floors", "stress"]
-visual_start_date = "2022-03-04" #@param {type:"date"}
+visual_start_date = "2023-11-07" #@param {type:"date"}
 # visual_end_date = "2022-04-04" #@param {type: "date"}
 time_interval = "One Day" #@param ["One Day", "One Week (7 Days)", "One Month (30 Days)", "One Year (365 Days)", "Entire Time Period"]
 smooth_plot = True #@param {type:"boolean"}
@@ -408,7 +409,7 @@ elif time_interval == "Entire Time Period":
 print(f"End date: {dates[end_date_index]}")
 
 
-# + cellView="form" colab={"base_uri": "https://localhost:8080/", "height": 353} id="EJLjY5VqFUjR" outputId="a3e28533-1cdd-43ef-bf7a-0ff72094964f"
+# %% cellView="form" colab={"base_uri": "https://localhost:8080/", "height": 353} id="EJLjY5VqFUjR" outputId="a3e28533-1cdd-43ef-bf7a-0ff72094964f"
 #@title Plot Visualization
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
@@ -632,7 +633,7 @@ elif feature == "stress":
     plt.text(0.98, 0.85, f'avg stress: {avg_stress:.0f}', ha='right', va='top', transform=ax.transAxes)
     plt.show()
 
-# + [markdown] id="Tc7P0-ow9u32"
+# %% [markdown] id="Tc7P0-ow9u32"
 # # 7. Advanced Visualization
 #
 # Now we'll do some more advanced plotting that at times features hardcore matplotlib hacking with the benefit of aesthetic quality.
@@ -645,7 +646,7 @@ elif feature == "stress":
 #
 # To figure this out, we'll make a calendar plot. Fortunately, this idea is easy to execute with the use of [`july`](https://github.com/e-hulten/july/), a custom library that allows us to create beautiful calendar plots. We'll interpret step count as a proxy for usage and plot colors accordingly.
 
-# + colab={"base_uri": "https://localhost:8080/", "height": 325} id="GHt9rAbJ9yJi" outputId="19cf6ee3-0877-435e-88fa-f52b08f377b3"
+# %% colab={"base_uri": "https://localhost:8080/", "height": 325} id="GHt9rAbJ9yJi" outputId="19cf6ee3-0877-435e-88fa-f52b08f377b3"
 steps = device.get_data("steps", params=params)
 steps_df_list = []
 for i in range(len(steps)):
@@ -658,7 +659,7 @@ july.calendar_plot(daily_steps.index, daily_steps.values / 1000, value_label=Tru
 plt.suptitle('Step Count (in thousands)', y=1.03)
 plt.show()
 
-# + [markdown] id="JuJ_T90o6ng_"
+# %% [markdown] id="JuJ_T90o6ng_"
 # This plot is very important because we are able to gain a high-level overview of the usage patterns, which informs all further analysis. If we discover that the participant has not worn their watch at all or has stopped wearing it for an extended period of time, then this is crucial information for figuring out why downstream analyses may be returning unexpected results.
 #
 # ## 7.2. Breath rate over a given day
@@ -667,13 +668,13 @@ plt.show()
 #
 # <img src="https://i.imgur.com/wpO1dBy.png" width=800></img>
 
-# + cellView="form" colab={"base_uri": "https://localhost:8080/", "height": 426} id="iamV70HB48VG" outputId="24d98103-2fcf-4029-d354-01614a79a98f"
+# %% cellView="form" colab={"base_uri": "https://localhost:8080/", "height": 426} id="iamV70HB48VG" outputId="24d98103-2fcf-4029-d354-01614a79a98f"
 # get rid of any garbage output
 # https://stackoverflow.com/questions/56727370/how-to-suppress-output-in-google-colaboratory-cell-which-executes-a-command-line
 # #%%capture
 
 #@title Choose a date to visualize (timezone is where the data was *collected*)
-date_to_visualize = "2022-03-12" #@param {type:"date"}
+date_to_visualize = "2023-11-07" #@param {type:"date"}
 timezone_name = "US/Pacific" #@param {type:"string"}
 
 import warnings
@@ -708,6 +709,7 @@ import io
 from IPython.core.interactiveshell import InteractiveShell
 from IPython.display import clear_output
 
+print(heart_rate_day)
 matplotlib.rcParams['timezone'] = timezone_name
 
 # change the background to the same grey
@@ -874,17 +876,17 @@ plt.grid(color='gainsboro', which='major', axis='y', linestyle='solid')
 
 plt.show()
 
-# + [markdown] id="7N0n5cvpfx-u"
+# %% [markdown] id="7N0n5cvpfx-u"
 # Our visualization isn't exactly like the one on Garmin Connect webapp, and that is because our extracted data (provided by the API), only gives us the breath rate every 15 minutes. That is why our plot looks much less dense.
 
-# + [markdown] id="d0YoaGGQJKZP"
+# %% [markdown] id="d0YoaGGQJKZP"
 # # 8. Outlier Detection and Data Cleaning
 #
 # In this section, we will detect outliers in our extracted data and impute them.
 #
 # Since there are currently no outliers (by construction, since it is simulated to have none), we will manually inject a couple.
 
-# + id="QL84SPh3hleD"
+# %% id="QL84SPh3hleD"
 hr_data = hr[start_date_index:end_date_index]
 df = pd.DataFrame(hr_data)
 resting = df['restingHeartRate']
@@ -900,7 +902,7 @@ continuous_hr = concatenated_data[:, 1]
 # Injecting an anomaly
 concatenated_data[10][1] = 5
 
-# + [markdown] id="yZz-WcK6JPob"
+# %% [markdown] id="yZz-WcK6JPob"
 # To identify outliers in our data, we'll use z-scores, which measure how far a data point deviates from the mean in terms of standard deviations, and is given by this formula:
 #
 # $$
@@ -912,7 +914,7 @@ concatenated_data[10][1] = 5
 # **Step 1**: we calculate the z-scores for each data point in the average heart rate column. We then define a threshold value to determine outliers based on the absolute z-scores. Any data point with an absolute z-score greater than the threshold is considered an outlier.
 #
 
-# + id="e-1bO3NhJQVG"
+# %% id="e-1bO3NhJQVG"
 from scipy.stats import zscore
 
 # Calculate z-scores
@@ -922,10 +924,10 @@ threshold = 3 #@param {type:"number"}
 
 outlier_indices = np.where(np.abs(z_scores) > threshold)[0]
 
-# + [markdown] id="d6N2UexQmosh"
+# %% [markdown] id="d6N2UexQmosh"
 # **Step 2**: We replace the outlier datapoint by averaging around it.
 
-# + colab={"base_uri": "https://localhost:8080/"} id="HPtvyjakmpC4" outputId="64019b13-31d6-41f5-87dd-846b0f72d6fc"
+# %% colab={"base_uri": "https://localhost:8080/"} id="HPtvyjakmpC4" outputId="64019b13-31d6-41f5-87dd-846b0f72d6fc"
 old_data = []
 old_time_idx = []
 new_data = []
@@ -942,10 +944,10 @@ for idx in outlier_indices:
 
 old_time_idx = pd.to_datetime(old_time_idx, unit='ms')
 
-# + [markdown] id="0XhiSNulm02S"
+# %% [markdown] id="0XhiSNulm02S"
 # **Step 3**: We visualize the outlier and the data we have cleaned.
 
-# + colab={"base_uri": "https://localhost:8080/", "height": 364} id="wXXq1psspSM2" outputId="84aaea05-0f21-4ca1-a801-7d6cf8549df6"
+# %% colab={"base_uri": "https://localhost:8080/", "height": 364} id="wXXq1psspSM2" outputId="84aaea05-0f21-4ca1-a801-7d6cf8549df6"
 fig, ax = plt.subplots(figsize=(8, 3))
 plt.style.use('default')
 
@@ -967,14 +969,14 @@ ax.spines['left'].set_visible(False)
 plt.text(0.98, 0.95, f'max heart rate: {max_hr} bpm', ha='right', va='top', transform=ax.transAxes)
 plt.show()
 
-# + [markdown] id="FWVtNgfkpWuS"
+# %% [markdown] id="FWVtNgfkpWuS"
 # # 9. Statistical Data Analysis
 #
 # Data isn't much without some analysis, so we're going to do some in this section.
 #
 # DISCLAIMER: We do not use the analyses below as evidence supporting any scientific claims. These analyses are purely intended for educational purposes.
 
-# + [markdown] id="hLQldO9-qgDR"
+# %% [markdown] id="hLQldO9-qgDR"
 # ## 9.1. Heart rate vs. activity
 #
 # This first mini investigation will be to see if heart rate does increase when more steps are taken (and thus there is more activity). To be more specific, we would like to test the hypothesis that a higher step count is associated with a higher heart rate.
@@ -983,7 +985,7 @@ plt.show()
 #
 # **Step 1**: We first extract the heart rate values from our heart rate dataframe. We create a new dataframe which contains two columns, the hour in the day, and the heart rate value recorded for this hour.
 
-# + id="hLMWqk2NqHy6"
+# %% id="hLMWqk2NqHy6"
 df = pd.DataFrame(hr)
 continuous_hr = df['heartRateValues']
 concatenated_data = []
@@ -992,10 +994,10 @@ for row in continuous_hr:
 concatenated_data = np.array(concatenated_data)
 hr_df = pd.DataFrame(concatenated_data, columns=['timestamp', 'value'])
 
-# + [markdown] id="0D6pP6rirBDR"
+# %% [markdown] id="0D6pP6rirBDR"
 # **Step 2**: We organize the steps data from our steps dataframe. Since the number of steps is recorded every 15 minutes, in order to match with our heart rate data, we will need to add up the step count in the 4 15-minute intervals in the hour.
 
-# + id="xXFQvy1CqO2M"
+# %% id="xXFQvy1CqO2M"
 steps_by_hour = pd.DataFrame(columns=['timestamp', 'step_val_avg'])
 num_days = (
     datetime.strptime(end_date, "%Y-%m-%d")
@@ -1036,16 +1038,16 @@ for _ in range(num_days):
             steps_by_hour = pd.concat([steps_by_hour, pd.DataFrame({'timestamp': [timestamp], 'step_val_avg': [step_val_avg]})], ignore_index=True)
             start_datetime += timedelta(minutes=60)
 
-# + [markdown] id="yUX1Xw7grVSv"
+# %% [markdown] id="yUX1Xw7grVSv"
 # **Step 3**: We will merge our organized heart rate dataframe and steps dataframe together to make our plotting more convenient.
 
-# + id="SGvUuHuwtBJG"
+# %% id="SGvUuHuwtBJG"
 merged_df = pd.merge(hr_df, steps_by_hour, on='timestamp')
 
-# + [markdown] id="9OBdbqv8ryV8"
+# %% [markdown] id="9OBdbqv8ryV8"
 # **Step 4**: Finally, we plot a scatter plot of heart rate and step count. `sns.jointplot` allows us to visualize the distribution in the 2D space and also the distribution for each variable.
 
-# + colab={"base_uri": "https://localhost:8080/", "height": 876} id="zp2VYg1FqPb5" outputId="e4bbc293-2dfd-4277-d3b2-7068dfa3e053"
+# %% colab={"base_uri": "https://localhost:8080/", "height": 876} id="zp2VYg1FqPb5" outputId="e4bbc293-2dfd-4277-d3b2-7068dfa3e053"
 # %pip install seaborn
 import seaborn as sns
 
@@ -1054,10 +1056,10 @@ sns.jointplot(x='step_val_avg', y='value', data=merged_df)
 plt.xlabel('Step count')
 plt.ylabel('Heart rate')
 
-# + [markdown] id="_bFpJSkvsFY2"
+# %% [markdown] id="_bFpJSkvsFY2"
 # **Step 5**: Although we don't see an obvious trend here, we demonstrate the Wald test which can provide strong quantitative evidence to correlation between two variables.
 
-# + colab={"base_uri": "https://localhost:8080/"} id="_xN4JenS3t03" outputId="6dbba2a9-654f-48ba-872c-5809d9ae385c"
+# %% colab={"base_uri": "https://localhost:8080/"} id="_xN4JenS3t03" outputId="6dbba2a9-654f-48ba-872c-5809d9ae385c"
 from scipy import stats
 slope, intercept, r_value, p_value, std_err = stats.linregress(merged_df['step_val_avg'], merged_df['value'])
 
@@ -1065,19 +1067,19 @@ print(f'Slope: {slope:.3g}')
 print(f'Coefficient of determination: {r_value**2:.3g}')
 print(f'p-value: {p_value}')
 
-# + [markdown] id="8MtXScSzsEoN"
+# %% [markdown] id="8MtXScSzsEoN"
 # Here, the slope indicates for every unit increase in the independent variable, the dependent variable increases or decreases by how many units. The coefficient of determination represents the percentage of the variance in the dependent variable that can explained by the independent variable. The p-value is the probability of observing a correlation as strong as the observed one in the sample, assuming there is no correlation in the population. A p-value that is less than 5% indicated statistical evidence.
 #
 # In this investigation, it looks like that there is indeed a correlation between step count and heart rate!
 
-# + [markdown] id="LNN0O5TSgnAT"
+# %% [markdown] id="LNN0O5TSgnAT"
 # ## 9.2. Heart rate vs. breaths per minute
 #
 # We may also be interested in understanding the relationship between the number of breaths the user takes per minute and the corresponding heart rate. In this situation, we would probably expect higher heart rates to be associated with a higher breath rate.
 #
 # **Step 1**: We first organize the respiration data. The respiration value is collected every 15 minutes. But since our heart rate data is collected every hour, we take the mean of the breath rate in the 1-hour interval.
 
-# + id="agdSNRUGQMIm"
+# %% id="agdSNRUGQMIm"
 df = pd.DataFrame(hr)
 continuous_hr = df['heartRateValues']
 concatenated_data = []
@@ -1087,7 +1089,7 @@ concatenated_data = np.array(concatenated_data)
 hr_df = pd.DataFrame(concatenated_data, columns=['timestamp', 'value'])
 hr_df['timestamp'] = pd.to_datetime(hr_df['timestamp'], unit='ms')
 
-# + id="vLEarIpkb3Mm"
+# %% id="vLEarIpkb3Mm"
 df = pd.DataFrame(respiration)
 res_column = df['respirationValuesArray']
 
@@ -1101,10 +1103,10 @@ res_df.columns = ['time', 'breath_rate']
 res_df['time'] = pd.to_datetime(res_df['time'])
 res_by_hour = res_df.groupby(res_df['time'].dt.floor('H'))['breath_rate'].mean().reset_index()
 
-# + [markdown] id="wJNayf22o-k2"
+# %% [markdown] id="wJNayf22o-k2"
 # **Step 2**: We merge the respiration dataframe we just organized with the heart rate data. We use the heart rate dataframe which we have already organized in section 9.1.
 
-# + id="3EtfWuzHh_Zf"
+# %% id="3EtfWuzHh_Zf"
 hr_df['timestamp'] = pd.to_datetime(hr_df['timestamp'])
 res_by_hour['time'] = pd.to_datetime(res_by_hour['time'])
 
@@ -1113,18 +1115,18 @@ merged_df.rename(columns={'1': 'breath_rate', 'value': 'heart_rate'}, inplace=Tr
 merged_df.drop(columns=['time'], inplace=True)
 
 
-# + [markdown] id="0X63hsOipYD7"
+# %% [markdown] id="0X63hsOipYD7"
 # **Step 3**: We plot a box plot that visualizes the relationship between heart rate and breaths per minute using `sns.boxplot`.
 
-# + colab={"base_uri": "https://localhost:8080/", "height": 476} id="xyBooNasjNaC" outputId="713a9769-ef82-49ac-ea27-0511590f4e01"
+# %% colab={"base_uri": "https://localhost:8080/", "height": 476} id="xyBooNasjNaC" outputId="713a9769-ef82-49ac-ea27-0511590f4e01"
 sns.boxplot(x=merged_df['breath_rate'].astype(int), y=merged_df['heart_rate'])
 plt.xlabel('Breaths per minute')
 plt.ylabel('Heart rate')
 
-# + [markdown] id="UKVUkHYQpqev"
+# %% [markdown] id="UKVUkHYQpqev"
 # Does it seem that there is a correlation between heart rate and breaths per minute? Our null hypothesis in this situation is that heart rates do not increase as breaths per minute increase. Again, as was the case before, we use the Wald test, which addresses exactly this setting.
 
-# + colab={"base_uri": "https://localhost:8080/"} id="AvYWyNvCksW4" outputId="02a31a82-8d71-469c-a89d-c662d577a886"
+# %% colab={"base_uri": "https://localhost:8080/"} id="AvYWyNvCksW4" outputId="02a31a82-8d71-469c-a89d-c662d577a886"
 from scipy import stats
 slope, intercept, r_value, p_value, std_err = stats.linregress(merged_df['heart_rate'], merged_df['breath_rate'])
 
@@ -1132,5 +1134,5 @@ print(f'Slope: {slope:.3g}')
 print(f'Coefficient of determination: {r_value**2:.3g}')
 print(f'p-value: {p_value:.3g}')
 
-# + [markdown] id="_XdZFVpBqEQq"
+# %% [markdown] id="_XdZFVpBqEQq"
 # Since the p-value here is larger than 0.05, we cannot reject the null hypothesis at the 5% significance level. This suggests that there isn't enough evidence to conclude that breath rate is related to heart rate. But again, our data here is synthetically generated and does not necessarily represent the truth.
