@@ -112,8 +112,8 @@ import wearipedia
 
 # %% id="M-EYhl7EFUjP"
 #@title Enter Garmin login credentials
-email_address = "stefren97@gmail.com" #@param {type:"string"}
-password = "BeRWsN4^f3" #@param {type:"string"}
+email_address = "" #@param {type:"string"}
+password = "" #@param {type:"string"}
 
 # %% [markdown] id="SWm4H8xsFUjP"
 # # 3. Data Extraction
@@ -160,9 +160,6 @@ hydration = device.get_data("hydration", params=params)
 sleep = device.get_data("sleep", params=params)
 spo2 = device.get_data("spo2", params=params)
 hrv = device.get_data("hrv", params=params)
-
-# %% id="07IN5GjZFUjQ"
-print(floors)
 
 # %% [markdown] id="oHVjBE2qFUjQ"
 # # 4. Data Exporting
@@ -333,8 +330,8 @@ if get_hrv:
 # %% cellView="form" colab={"base_uri": "https://localhost:8080/", "height": 402} id="nzUXJateJZWs" outputId="fc2dfb47-0e67-48a1-b040-257f473bd463"
 #@title Select dates to check user adherence
 
-adherence_start_date = "2022-04-10" #@param {type:"date"}
-adherence_end_date = "2022-04-20" #@param {type:"date"}
+adherence_start_date = "2023-11-05" #@param {type:"date"}
+adherence_end_date = "2023-11-12" #@param {type:"date"}
 hr_df = pd.DataFrame(hr)
 
 date_range = pd.date_range(start=adherence_start_date, end=adherence_end_date)
